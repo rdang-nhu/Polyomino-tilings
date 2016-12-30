@@ -7,10 +7,28 @@ public class Polyomino{
 	// On ajoute également les cases_voisines (utilisé pour générer des polyominos)
 	ArrayList<int[]> casesVoisines;
 	
+	// Pour tester l'égalité, on garde en mémoire la case en bas à gauche en permanence
+	Integer[] case0;
+	
 	// Constructeur de base
 	Polyomino(){
 		cases = new ArrayList<int[]>();
 		casesVoisines = new ArrayList<int[]>();
+		case0 = new Integer[2];
+	}
+	
+	public void computeCase0(){
+		Integer[] res = new Integer[2];
+		res[0] = cases.get(0)[0];
+		res[1] = cases.get(0)[1];
+		for(int i = 0; i < cases.size(); i++){
+			int[] a = cases.get(i);
+			if((a[1] < res[1]) || (a[1]==res[1] && a[0]<res[0])){
+				res[0] = a[0];
+				res[1] = a[1];
+			}
+		}
+		this.case0 = res;
 	}
 	
 	// Création à partir d'une chaîne
@@ -79,18 +97,46 @@ public class Polyomino{
 			int[] aux = {x,y};
 			res.casesVoisines.add(aux);
 		}
+		res.case0[0] = p.case0[0];
+		res.case0[0] = p.case0[0];
 		return res;
 	}
 	
 	// fonction qui compare 2 polyominos de même aire
-	public boolean isEqual(Polyomino p){
+	public boolean isEqualFixed(Polyomino p){
+		p.computeCase0();
+		this.computeCase0();
 		boolean res = true;
 		for(int i = 0; i < p.cases.size(); i++){
-			if (! this.contains(p.cases.get(i))){
+			int[] a = new int[2];
+			a[0] = p.cases.get(i)[0] - p.case0[0] + this.case0[0];
+			a[1] = p.cases.get(i)[1] - p.case0[1] + this.case0[1];
+			if (! this.contains(a)){
 				res = false;
 			}
 		}
 		return res;
+	}
+	
+	public boolean isEqualFree(Polyomino p){
+		
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		
+		p.symetrie_x();
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		rotation();
+		if(this.isEqualFixed(p)) return true;
+		return false;
 	}
 	
 	public void translater(int x, int y){
@@ -100,7 +146,7 @@ public class Polyomino{
 		}
 	}
 	
-	public void rotation(int x, int y){ //quart de tour sens trigo
+	public void rotation(){ //quart de tour sens trigo
 		for(int i = 0; i < this.cases.size(); i++){
 			int u =  this.cases.get(i)[0];
 			this.cases.get(i)[0] = -this.cases.get(i)[1];
@@ -141,6 +187,18 @@ public class Polyomino{
 		s += "\n";
 		return s;
 	}
+	
+	public void printCasesV(){
+		String s = "";
+		for(int j = 0; j < this.casesVoisines.size(); j++){
+			int[] pr = this.casesVoisines.get(j);
+			s += "("+pr[0]+",";
+			s += pr[1]+")";
+		}
+		s += "\n";
+		System.out.print(s);
+	}
+	
 	
 	public static void test1(){
 		Polyomino p = new Polyomino("[(12,23),(45,600),(123,4500)]/n");
