@@ -62,14 +62,21 @@ public class Polyomino{
 		}
 	}
 	
-	public boolean contains(int[] coord){
+	public boolean contains(int[] coord, int[] caseTest){
 		boolean res = false;
 		for(int i = 0; i < cases.size(); i++){
-			if(cases.get(i)[0] == coord[0] && cases.get(i)[1] == coord[1]){
+			if(cases.get(i)[0] == coord[0]+caseTest[0] && cases.get(i)[1] == coord[1]+caseTest[1]){
 				res = true;
 			}
 		}
 		return res;
+	}
+	
+	public boolean contains(Polyomino l, int[] caseTest){ // sert dans fixedPolyominoTilings
+		for(int i = 0; i < l.cases.size(); i++){
+			if(! this.contains(l.cases.get(i), caseTest) ) return false;
+		}
+		return true;
 	}
 	
 	public boolean vContains(int[] coord){
@@ -111,7 +118,8 @@ public class Polyomino{
 			int[] a = new int[2];
 			a[0] = p.cases.get(i)[0] - p.case0[0] + this.case0[0];
 			a[1] = p.cases.get(i)[1] - p.case0[1] + this.case0[1];
-			if (! this.contains(a)){
+			int[] caseTest = {0,0};
+			if (! this.contains(a, caseTest)){
 				res = false;
 			}
 		}

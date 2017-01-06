@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.BufferedReader;
 
 public class PolyominoList extends ArrayList<Polyomino>{ //ne gère pas les exceptions en cas de non-lecture du fichier
+	static int[] caseUtile = {0,0};
+	
 	PolyominoList(String nom){
 		super();
 		try
@@ -109,16 +111,16 @@ public class PolyominoList extends ArrayList<Polyomino>{ //ne gère pas les excep
 				int[] v3 = {x-1,y};
 				int[] v4 = {x,y-1};
 				
-				if(! a.contains(v1) && ! a.vContains(v1)){
+				if(! a.contains(v1, caseUtile) && ! a.vContains(v1)){
 					a.casesVoisines.add(v1);
 				}
-				if(! a.contains(v2) && ! a.vContains(v2)){
+				if(! a.contains(v2, caseUtile) && ! a.vContains(v2)){
 					a.casesVoisines.add(v2);
 				}
-				if(! a.contains(v3) && ! a.vContains(v3)){
+				if(! a.contains(v3, caseUtile) && ! a.vContains(v3)){
 					a.casesVoisines.add(v3);
 				}
-				if(! a.contains(v4) && ! a.vContains(v4)){
+				if(! a.contains(v4, caseUtile) && ! a.vContains(v4)){
 					a.casesVoisines.add(v4);
 				}
 				
@@ -160,7 +162,7 @@ public class PolyominoList extends ArrayList<Polyomino>{ //ne gère pas les excep
 	
 	public static void main(String[] args){
 		//test1();
-		PolyominoList resultat = fixedPolyomino(5);
+		PolyominoList resultat = fixedPolyomino(3);
 		
 
 		resultat.draw(10, 5);
